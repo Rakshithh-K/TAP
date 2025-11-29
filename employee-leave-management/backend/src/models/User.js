@@ -6,6 +6,9 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   role: { type: String, enum: ['employee', 'manager'], default: 'employee' },
+  isVerified: { type: Boolean, default: false },
+  verificationOTP: { type: String },
+  otpExpires: { type: Date },
   leaveBalance: {
     sickLeave: { type: Number, default: 10 },
     casualLeave: { type: Number, default: 5 },

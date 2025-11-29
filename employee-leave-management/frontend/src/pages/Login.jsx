@@ -14,8 +14,28 @@ const Login = () => {
     try {
       const endpoint = isRegister ? '/auth/register' : '/auth/login';
       const { data } = await api.post(endpoint, formData);
-      setAuth(data.token, data.user);
-      navigate('/dashboard');
+      
+      if (isRegister) {
+        // Registration successful, redirect to OTP verification
+        navigate('/verify-otp', { 
+          state: { 
+            userId: data.userId, 
+            email: data.email 
+          } 
+        });
+      } else if (data.requiresVerification) {
+        // Login requires email verification
+        navigate('/verify-otp', { 
+          state: { 
+            userId: data.userId, 
+            email: formData.email 
+          } 
+        });
+      } else {
+        // Login successful
+        setAuth(data.token, data.user);
+        navigate('/dashboard');
+      }
     } catch (error) {
       alert(error.response?.data?.message || 'Authentication failed');
     }
